@@ -1,0 +1,20 @@
+#!/bin/bash
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# SETUP NEW PATH
+#=================================================
+if [ $change_path -eq 1 ]; then
+    # Make a backup of the original nginx config
+    ynh_backup_if_checksum_is_different --file="/etc/nginx/conf.d/$domain.d/$app.conf"
+    # Create a dedicated nginx config
+    ynh_config_add_nginx
+fi
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression "Change of URL completed for $app"

@@ -1,0 +1,35 @@
+#!/bin/bash
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+ynh_script_progression "Setting up source files..."
+
+# Create the app directory
+mkdir -p "$install_dir"
+
+# Copy the globstory files from the source directory
+cp -r /home/ale/Documents/claude-fileSystem/YUNOHOST/globstory/css "$install_dir"/
+cp -r /home/ale/Documents/claude-fileSystem/YUNOHOST/globstory/js "$install_dir"/
+cp -r /home/ale/Documents/claude-fileSystem/YUNOHOST/globstory/images "$install_dir"/
+cp /home/ale/Documents/claude-fileSystem/YUNOHOST/globstory/app.html "$install_dir"/
+
+# Set permissions
+chown -R $app:www-data "$install_dir"
+
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+ynh_script_progression "Configuring NGINX web server..."
+
+# Create a dedicated nginx config
+ynh_config_add_nginx
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression "Installation of $app completed"
