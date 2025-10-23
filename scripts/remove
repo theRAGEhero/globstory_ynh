@@ -14,7 +14,7 @@ install_dir="$(ensure_install_dir)"
 # REMOVE APPLICATION FILES
 #=================================================
 ynh_script_progression --message="Removing application directory..."
-ynh_secure_remove --file="$install_dir"
+safe_remove_path "$install_dir"
 
 #=================================================
 # CLEANUP NGINX CONFIGURATION

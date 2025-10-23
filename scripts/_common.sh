@@ -23,3 +23,12 @@ ensure_install_dir() {
     fi
     printf '%s\n' "$install_dir"
 }
+
+safe_remove_path() {
+    local target="$1"
+    if command -v ynh_safe_rm >/dev/null 2>&1; then
+        ynh_safe_rm "$target"
+    else
+        ynh_secure_remove --file="$target"
+    fi
+}

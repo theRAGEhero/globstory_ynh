@@ -42,7 +42,7 @@ chmod -R u=rwX,g=rX,o= "$install_dir"
 # CONFIGURE PERMISSIONS
 #=================================================
 ynh_script_progression --message="Configuring access permissions..."
-ynh_permission_create --permission="main" --app="$app" --url="$path_url" --allowed="$init_main_permission"
+ynh_permission_create --permission="main" --url="$path_url" --allowed="$init_main_permission"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -50,7 +50,7 @@ ynh_permission_create --permission="main" --app="$app" --url="$path_url" --allow
 ynh_script_progression --message="Configuring web server..."
 ynh_config_add_nginx
 
-ynh_systemd_action --service_name=nginx --action=reload
+ynh_systemctl --service=nginx --action=reload
 
 #=================================================
 # FINALISE INSTALLATION
