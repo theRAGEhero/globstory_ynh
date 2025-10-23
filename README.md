@@ -29,9 +29,17 @@ You can either use the YunoHost admin web interface or the command line to insta
 
 ### From the command line
 
+```bash
+yunohost app install https://github.com/theRAGEhero/globstory_ynh
 ```
-yunohost app install https://github.com/yourusername/globstory_ynh
+
+### Updating
+
+```bash
+yunohost app upgrade globstory -u https://github.com/theRAGEhero/globstory_ynh
 ```
+
+Application files are deployed to `/var/www/<instance>` (e.g. `/var/www/globstory`) and served through an NGINX alias at the path chosen during installation.
 
 ## Configuration
 
@@ -39,7 +47,13 @@ No additional configuration is needed after installation. GlobStory works out of
 
 ## Documentation
 
-For more information about GlobStory and its features, please refer to the original project documentation.
+For more information about GlobStory and its features, please refer to the [upstream project README](https://github.com/theRAGEhero/globstory#readme).
+
+## Packaging notes
+
+- Static assets live in `sources/app` and are deployed verbatim to the YunoHost instance.
+- When updating the upstream code, sync the `globstory` repository and refresh `sources/app` (e.g. `rsync -a --delete ../globstory/ sources/app`).
+- The main permission is public by default; restrict it during installation if you want authenticated access only.
 
 ## License
 

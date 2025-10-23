@@ -3,18 +3,37 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
+ynh_abort_if_errors
+
+old_domain="$(ynh_app_setting_get --app="$app" --key=domain)"
+
+domain=$YNH_APP_ARG_DOMAIN
+path_url=$YNH_APP_ARG_PATH
+
 #=================================================
-# SETUP NEW PATH
+# UPDATE NGINX CONFIGURATION
 #=================================================
-if [ $change_path -eq 1 ]; then
-    # Make a backup of the original nginx config
-    ynh_backup_if_checksum_is_different --file="/etc/nginx/conf.d/$domain.d/$app.conf"
-    # Create a dedicated nginx config
-    ynh_config_add_nginx
+ynh_script_progression --message="Updating web routing..."
+ynh_backup_if_checksum_is_different --file="/etc/nginx/conf.d/$old_domain.d/$app.conf"
+
+if [[ "$old_domain" != "$domain" ]]; then
+    ynh_secure_remove --file="/etc/nginx/conf.d/$old_domain.d/$app.conf"
 fi
+
+ynh_app_setting_set --app="$app" --key=domain --value="$domain"
+ynh_app_setting_set --app="$app" --key=path --value="$path_url"
+
+ynh_config_add_nginx
+ynh_systemd_action --service_name=nginx --action=reload
+
+#=================================================
+# UPDATE PERMISSIONS
+#=================================================
+ynh_script_progression --message="Updating permissions..."
+ynh_permission_update --permission="main" --url="$path_url"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression "Change of URL completed for $app"
+ynh_script_progression --message="Change of URL completed for $app"

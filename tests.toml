@@ -1,15 +1,15 @@
 test_format = 2
 
-[default]
+[default.args]
+domain = "domain.tld"
+path = "/globstory"
+init_main_permission = "visitors"
 
-# -------------------------------
-# Default args to use for install
-# -------------------------------
-args.domain = "domain.tld"
-args.path = "/globstory"
-args.init_main_permission = "visitors"
+[[tests]]
+id = "install"
+type = "install"
 
-# -------------------------------
-# Default system requirements
-# -------------------------------
-test_upgrade_from.c6e54c96.name = "Upgrade from v1.0~ynh1"
+[[tests]]
+id = "upgrade-from-1-0-ynh1"
+type = "upgrade"
+from = "1.0~ynh1"

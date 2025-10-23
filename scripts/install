@@ -3,33 +3,57 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
-#=================================================
-# DOWNLOAD, CHECK AND UNPACK SOURCE
-#=================================================
-ynh_script_progression "Setting up source files..."
+ynh_abort_if_errors
+pkg_version="$(awk -F'"' '/^version =/ {print $2; exit}' "$pkg_root_dir/manifest.toml")"
 
-# Create the app directory
+#=================================================
+# COLLECT ARGUMENTS AND INITIALISE SETTINGS
+#=================================================
+domain=$YNH_APP_ARG_DOMAIN
+path_url=$YNH_APP_ARG_PATH
+init_main_permission=$YNH_APP_ARG_INIT_MAIN_PERMISSION
+
+ynh_app_setting_set --app="$app" --key=domain --value="$domain"
+ynh_app_setting_set --app="$app" --key=path --value="$path_url"
+ynh_app_setting_set --app="$app" --key=init_main_permission --value="$init_main_permission"
+
+install_dir="/var/www/$app"
+ynh_app_setting_set --app="$app" --key=install_dir --value="$install_dir"
+
+#=================================================
+# CREATE SYSTEM USER AND DIRECTORIES
+#=================================================
+ynh_script_progression --message="Creating dedicated system user..."
+ynh_system_user_create --username="$app" --home_dir="$install_dir"
+
+ynh_script_progression --message="Preparing installation directory..."
 mkdir -p "$install_dir"
+chown "$app":www-data "$install_dir"
 
-# Copy the globstory files from the source directory
-cp -r /home/ale/Documents/claude-fileSystem/YUNOHOST/globstory/css "$install_dir"/
-cp -r /home/ale/Documents/claude-fileSystem/YUNOHOST/globstory/js "$install_dir"/
-cp -r /home/ale/Documents/claude-fileSystem/YUNOHOST/globstory/images "$install_dir"/
-cp /home/ale/Documents/claude-fileSystem/YUNOHOST/globstory/app.html "$install_dir"/
+#=================================================
+# DEPLOY APPLICATION FILES
+#=================================================
+ynh_script_progression --message="Deploying application files..."
+rsync -a "$pkg_sources_dir/app/" "$install_dir"/
+chown -R "$app":www-data "$install_dir"
+chmod -R u=rwX,g=rX,o= "$install_dir"
 
-# Set permissions
-chown -R $app:www-data "$install_dir"
+#=================================================
+# CONFIGURE PERMISSIONS
+#=================================================
+ynh_script_progression --message="Configuring access permissions..."
+ynh_permission_create --permission="main" --app="$app" --url="$path_url" --allowed="$init_main_permission"
 
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression "Configuring NGINX web server..."
-
-# Create a dedicated nginx config
+ynh_script_progression --message="Configuring web server..."
 ynh_config_add_nginx
 
-#=================================================
-# END OF SCRIPT
-#=================================================
+ynh_systemd_action --service_name=nginx --action=reload
 
-ynh_script_progression "Installation of $app completed"
+#=================================================
+# FINALISE INSTALLATION
+#=================================================
+ynh_app_setting_set --app="$app" --key=installed_version --value="$pkg_version"
+ynh_script_progression --message="Installation of $app completed"

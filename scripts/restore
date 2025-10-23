@@ -3,6 +3,14 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
+ynh_abort_if_errors
+
+#=================================================
+# LOAD STORED SETTINGS
+#=================================================
+install_dir="$(ensure_install_dir)"
+domain="$(ynh_app_setting_get --app="$app" --key=domain)"
+
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
@@ -11,7 +19,7 @@ ynh_script_progression "Restoring the app main directory..."
 ynh_restore_file --origin_path="$install_dir"
 
 # Restore permissions on app files
-chown -R $app:www-data "$install_dir"
+chown -R "$app":www-data "$install_dir"
 
 #=================================================
 # RESTORE NGINX CONFIGURATION

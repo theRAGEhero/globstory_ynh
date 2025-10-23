@@ -3,6 +3,14 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
+ynh_abort_if_errors
+
+#=================================================
+# RETRIEVE INSTALLATION PATH AND DOMAIN
+#=================================================
+install_dir="$(ensure_install_dir)"
+domain="$(ynh_app_setting_get --app="$app" --key=domain)"
+
 #=================================================
 # STANDARD BACKUP STEPS
 #=================================================
