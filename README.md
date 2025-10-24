@@ -1,68 +1,43 @@
-# GlobStory YunoHost Application
+# GlobStory for YunoHost
 
-GlobStory is a YunoHost application that provides an interactive historical map and Wikipedia explorer. This package allows for easy installation of GlobStory on your YunoHost server.
+[![Integration level](https://dash.yunohost.org/integration/globstory.svg)](https://dash.yunohost.org/app/globstory)  
+[![Install GlobStory with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=globstory)
+
+> GlobStory is an interactive historical map and Wikipedia explorer that lets you browse timelines, places, and articles on a single map interface.
 
 ## Overview
 
-GlobStory combines historical maps with Wikipedia content, allowing users to explore historical information in a geographical context. The application enables users to visualize historical events, places, and timelines on a map while accessing relevant Wikipedia articles.
+- Self-host the upstream [GlobStory](https://github.com/theRAGEhero/globstory) web client on your YunoHost server.
+- Explore historical events on an interactive map, with smart detection of years and place names inside articles.
+- Offer a multi-language experience with responsive layout and light/dark themes.
 
-## Features
+### Shipped version
 
-- Interactive historical map with time slider control
-- Wikipedia article integration with smart word and year detection
-- Multi-language support for various Wikipedia editions
-- Automatic location detection and highlighting for place names in articles
-- Year detection and time navigation from article content
-- Responsive design for desktop and mobile devices
-- Dark/light theme options
+- 1.0~ynh3
 
-## Installation
+### Screenshots
 
-You can either use the YunoHost admin web interface or the command line to install GlobStory:
+![](doc/screenshots/globstory.png)
 
-### From the web interface
+## Documentation and resources
 
-1. Go to your YunoHost admin page
-2. Navigate to Applications > Install
-3. Find GlobStory in the application list or provide the GitHub URL
-4. Follow the installation instructions
+- Official app website: <https://globstory.it>
+- Upstream code repository: <https://github.com/theRAGEhero/globstory>
+- YunoHost documentation for this app: <https://github.com/theRAGEhero/globstory_ynh>
+- Report a bug: <https://github.com/theRAGEhero/globstory_ynh/issues>
 
-### From the command line
+## Developer info
 
-```bash
-yunohost app install https://github.com/theRAGEhero/globstory_ynh
-```
+Please send your pull requests to the [packaging repository](https://github.com/theRAGEhero/globstory_ynh).
 
-### Updating
+To try the latest development version:
 
 ```bash
-yunohost app upgrade globstory -u https://github.com/theRAGEhero/globstory_ynh
+sudo yunohost app install https://github.com/theRAGEhero/globstory_ynh/tree/main
 ```
 
-Application files are deployed to `/var/www/<instance>` (e.g. `/var/www/globstory`) and served through an NGINX alias at the path chosen during installation.
+To upgrade from the command line:
 
-## Configuration
-
-No additional configuration is needed after installation. GlobStory works out of the box with the default settings.
-
-## Documentation
-
-For more information about GlobStory and its features, please refer to the [upstream project README](https://github.com/theRAGEhero/globstory#readme).
-
-## Packaging notes
-
-- Static assets live in `sources/app` and are deployed verbatim to the YunoHost instance.
-- When updating the upstream code, sync the `globstory` repository and refresh `sources/app` (e.g. `rsync -a --delete ../globstory/ sources/app`).
-- The main permission is public by default; restrict it during installation if you want authenticated access only.
-
-## License
-
-GlobStory is released under the MIT License.
-
-## YunoHost specific details
-
-- **Multi-instance:** Yes
-- **SSO:** No
-- **LDAP:** No
-- **Architecture:** all
-- **Minimum YunoHost version:** 12.0.9
+```bash
+sudo yunohost app upgrade globstory -u https://github.com/theRAGEhero/globstory_ynh/tree/main
+```
