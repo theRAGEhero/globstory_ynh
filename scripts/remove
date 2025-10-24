@@ -6,33 +6,10 @@ source /usr/share/yunohost/helpers
 ynh_abort_if_errors
 
 #=================================================
-# LOAD STORED SETTINGS
-#=================================================
-install_dir="$(ensure_install_dir)"
-
-#=================================================
-# REMOVE APPLICATION FILES
-#=================================================
-ynh_script_progression --message="Removing application directory..."
-safe_remove_path "$install_dir"
-
-#=================================================
 # CLEANUP NGINX CONFIGURATION
 #=================================================
 ynh_script_progression --message="Removing NGINX configuration..."
 ynh_config_remove_nginx
-
-#=================================================
-# REMOVE PERMISSIONS
-#=================================================
-ynh_script_progression --message="Cleaning permissions..."
-ynh_permission_delete --permission="main"
-
-#=================================================
-# REMOVE SYSTEM USER
-#=================================================
-ynh_script_progression --message="Removing dedicated system user..."
-ynh_system_user_delete --username="$app"
 
 #=================================================
 # FINISH CLEANUP

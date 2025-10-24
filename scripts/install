@@ -17,32 +17,17 @@ ynh_app_setting_set --app="$app" --key=domain --value="$domain"
 ynh_app_setting_set --app="$app" --key=path --value="$path_url"
 ynh_app_setting_set --app="$app" --key=init_main_permission --value="$init_main_permission"
 
-install_dir="/var/www/$app"
-ynh_app_setting_set --app="$app" --key=install_dir --value="$install_dir"
-
-#=================================================
-# CREATE SYSTEM USER AND DIRECTORIES
-#=================================================
-ynh_script_progression --message="Creating dedicated system user..."
-ynh_system_user_create --username="$app" --home_dir="$install_dir"
-
-ynh_script_progression --message="Preparing installation directory..."
-mkdir -p "$install_dir"
-chown "$app":www-data "$install_dir"
+install_dir="$(ensure_install_dir)"
+web_root="$install_dir/html"
 
 #=================================================
 # DEPLOY APPLICATION FILES
 #=================================================
 ynh_script_progression --message="Deploying application files..."
-rsync -a "$pkg_sources_dir/app/" "$install_dir"/
-chown -R "$app":www-data "$install_dir"
-chmod -R u=rwX,g=rX,o= "$install_dir"
-
-#=================================================
-# CONFIGURE PERMISSIONS
-#=================================================
-ynh_script_progression --message="Configuring access permissions..."
-ynh_permission_create --permission="main" --url="$path_url" --allowed="$init_main_permission"
+mkdir -p "$web_root"
+rsync -a "$pkg_sources_dir/app/" "$web_root"/
+chown -R "$app":www-data "$web_root"
+chmod -R u=rwX,g=rX,o= "$web_root"
 
 #=================================================
 # NGINX CONFIGURATION
